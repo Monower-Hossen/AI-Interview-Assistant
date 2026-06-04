@@ -1,0 +1,55 @@
+{
+    "job_title": "Software Engineer",
+    "level": "Senior",
+    "topics": [
+        "Design Patterns and Principles",
+        "Distributed Systems and Microservices",
+        "Cloud Computing and Deployment",
+        "Security and Authentication",
+        "Data Structures and Algorithms"
+    ],
+    "sample_questions": [
+        {
+            "topic": "Design Patterns and Principles",
+            "question": "Explain the Singleton pattern and its implications on multithreading."
+        },
+        {
+            "topic": "Distributed Systems and Microservices",
+            "question": "Describe a scenario where you would use a message broker like Apache Kafka for communication between microservices."
+        },
+        {
+            "topic": "Cloud Computing and Deployment",
+            "question": "What are the key differences between Amazon Web Services (AWS) and Microsoft Azure, and how would you choose between them?"
+        }
+    ],
+    "evaluation_criteria": [
+        "Problem-solving skills",
+        "Technical expertise",
+        "Communication skills",
+        "Collaboration and teamwork",
+        "Adaptability and learning agility"
+    ],
+    "interview_structure": [
+        {
+            "round": "Initial Screening",
+            "questions": [
+                "Can you tell me about your experience with design patterns and principles?",
+                "How do you handle conflicts between different microservices in a distributed system?"
+            ]
+        },
+        {
+            "round": "Technical Assessment",
+            "questions": [
+                "Implement a stack data structure using a linked list in your preferred programming language.",
+                "Design a simple microservice architecture using a message broker like Apache Kafka."
+            ]
+        },
+        {
+            "round": "Behavioral Interview",
+            "questions": [
+                "Tell me about a time when you had to troubleshoot a difficult technical issue.",
+                "Can you describe your experience working with a team to deliver a project on time?"
+            ]
+        }
+    ]
+}

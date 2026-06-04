@@ -1,0 +1,62 @@
+{
+    "role": "Machine Learning Engineer",
+    "level": "Senior",
+    "interview_config": {
+        "structure": {
+            "phase": "Two-round interview",
+            "round1": "Technical interview",
+            "round2": "Behavioral and technical interview"
+        },
+        "time_allocation": {
+            "round1": "60 minutes",
+            "round2": "90 minutes"
+        }
+    },
+    "topics": [
+        {
+            "topic": "Deep Learning Architectures",
+            "description": "Design and implementation of deep learning models",
+            "samples": [
+                "Design a neural network architecture for image classification",
+                "Explain the differences between CNN and RNN"
+            ]
+        },
+        {
+            "topic": "Natural Language Processing",
+            "description": "Text processing, sentiment analysis and language modeling",
+            "samples": [
+                "Implement a sentiment analysis model using NLTK and scikit-learn",
+                "Explain the concept of Word Embeddings"
+            ]
+        },
+        {
+            "topic": "Machine Learning Algorithms",
+            "description": "Implementation of machine learning algorithms",
+            "samples": [
+                "Implement a clustering algorithm using K-Means",
+                "Explain the differences between regression and classification"
+            ]
+        },
+        {
+            "topic": "Big Data and Data Engineering",
+            "description": "Design and implementation of big data pipelines",
+            "samples": [
+                "Design a data pipeline using Apache Beam",
+                "Explain the concept of data partitioning"
+            ]
+        },
+        {
+            "topic": "Cloud and DevOps",
+            "description": "Deployment and monitoring of machine learning models",
+            "samples": [
+                "Deploy a machine learning model using AWS SageMaker",
+                "Explain the concept of containerization"
+            ]
+        }
+    ],
+    "sample_questions": [
+        "What are the key differences between supervised and unsupervised learning?",
+        "Can you explain the concept of overfitting and how to mitigate it?",
+        "How would you design a data pipeline for a real-time recommendation system?"
+    ]
+}

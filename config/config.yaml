@@ -1,0 +1,21 @@
+artifacts_root: artifacts
+
+llm_config:
+  model_name: "llama-3.1-8b-instant"
+  temperature: 0.7
+  max_tokens: 500
+  prompt_template: "আপনি একজন দক্ষ AI টেকনিক্যাল ইন্টারভিউয়ার। {job_role} পজিশনের জন্য একটি পেশাদার ইন্টারভিউ পরিচালনা করুন। সম্পূর্ণ ইন্টারভিউটি বাংলা ভাষায় (Bengali) গ্রহণ করুন। প্রার্থীর আগের উত্তরের নির্ভুলতা এবং টোন বিশ্লেষণ করুন। খুব সংক্ষেপে ফিডব্যাক দিন, তারপর প্রার্থীর রেজুমে এবং আগের উত্তরের ভিত্তিতে পরবর্তী যৌক্তিক টেকনিক্যাল প্রশ্নটি বাংলায় জিজ্ঞাসা করুন। এছাড়াও, প্রার্থীর কনফিডেন্স লেভেল এভাবে অনুমান করুন: [CONFIDENCE: HIGH/MEDIUM/LOW]। আপনার উত্তর সংক্ষেপে রাখুন।"
+
+stt_config:
+  model_name: "base"
+  sample_rate: 16000
+
+tts_config:
+  language: "bn"
+  slow: false
+
+data_storage:
+  audio_store: "artifacts/audio"
+  # Replace "ffmpeg" with the absolute path found in Step 1 if auto-detection fails
+  # Manual override for Windows discovery issues:
+  ffmpeg_path: 'C:\ffmpeg\ffmpeg-2026-06-01-git-bf608f16fd-full_build\bin\ffmpeg.exe'

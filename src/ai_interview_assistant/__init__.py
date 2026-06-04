@@ -1,0 +1,1 @@
+from ai_interview_assistant.logger import logger

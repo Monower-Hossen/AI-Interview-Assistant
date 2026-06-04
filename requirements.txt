@@ -1,0 +1,33 @@
+# Web Framework & Server
+flask
+flask-cors
+python-multipart
+uvicorn
+
+# Free LLM Framework (Replacing LangChain-OpenAI with Groq/Ollama)
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-groq>=0.1.0
+
+# Free Speech-to-Text (Local & API)
+openai-whisper
+SpeechRecognition
+sounddevice
+scipy
+numpy
+
+# Free Text-to-Speech
+gTTS
+
+# Utilities & Config
+PyYAML
+python-box
+ensure
+python-dotenv
+setuptools
+pydantic
+
+# Development
+ipykernel
+pypdf
+joblib

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --ai-bubble: #334155;
+            --user-bubble: #0369a1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        h2 { font-size: 1.25rem; margin-bottom: 10px; color: var(--accent-color); }
+        label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 6px; }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-color);
+            border: 1px solid var(--ai-bubble);
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary { background: var(--accent-color); color: var(--bg-color); }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-danger { background: var(--danger); color: white; margin-top: auto; }
+
+        /* Main Chat Area */
+        .chat-section {
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            height: 85vh;
+        }
+
+        #chat-window {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-image: radial-gradient(#334155 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+
+        .bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .ai { align-self: flex-start; background: var(--ai-bubble); border-bottom-left-radius: 2px; }
+        .user { align-self: flex-end; background: var(--user-bubble); border-bottom-right-radius: 2px; }
+
+        /* Controls */
+        .controls {
+            padding: 20px;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .record-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--danger);
+            border: 4px solid var(--card-bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .record-btn:active { transform: scale(0.9); }
+        .recording { animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>AI Interviewer Assistant</h2>
+            
+            <label>Upload Resume (PDF)</label>
+            <input type="file" id="resume" accept=".pdf">
+            <button class="btn btn-primary" onclick="uploadResume()">Upload</button>
+
+            <hr style="border: 0.5px solid var(--ai-bubble); margin: 10px 0;">
+
+            <label>Job Role</label>
+            <input type="text" id="job_role" placeholder="e.g. Java Developer" value="Software Engineer">
+
+            <label>Language</label>
+            <select id="language">
+                <option value="en">English</option>
+                <option value="bn">Bengali</option>
+            </select>
+
+            <button class="btn btn-primary" onclick="startInterview()">Start Interview</button>
+            <button class="btn btn-primary" onclick="getFeedback()">Get Feedback</button>
+            <button class="btn btn-danger" onclick="resetInterview()">Reset Session</button>
+
+            <hr style="border: 0.5px solid var(--ai-bubble); margin: 10px 0;">
+            <div id="live-metrics" style="background: var(--bg-color); padding: 15px; border-radius: 8px; font-size: 0.85rem;">
+                <h3 style="font-size: 0.9rem; color: var(--accent-color); margin-bottom: 10px;">Live Analysis</h3>
+                <div class="mb-2">Emotion: <span id="metric-emotion" style="color: var(--success);">Neutral</span></div>
+                <div class="mb-2">Confidence: <span id="metric-confidence">N/A</span></div>
+                <div id="proctoring-alerts" style="color: var(--danger); font-size: 0.75rem; margin-top: 5px;"></div>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <div id="chat-window">
+                <div class="bubble ai">Welcome! Please upload your resume and select a job role to begin the interview.</div>
+            </div>
+            
+            <div class="controls">
+                <input type="text" id="text-input" placeholder="Type your answer here..." style="flex: 1; margin-bottom: 0; padding: 12px; border-radius: 8px; background: var(--ai-bubble); border: 1px solid var(--card-bg); color: white;">
+                <button class="btn btn-primary" onclick="sendText()" id="send-btn" disabled>Send</button>
+                <button id="record-btn" class="record-btn" onclick="toggleRecording()" disabled title="Start interview first">
+                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                </button>
+                <span id="status" style="color: var(--text-secondary); font-size: 0.8rem;">Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        const chatWindow = document.getElementById('chat-window');
+        const recordBtn = document.getElementById('record-btn');
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `bubble ${sender}`;
+            div.innerText = text;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function uploadResume() {
+            const file = document.getElementById('resume').files[0];
+            if (!file) return alert("Select a file");
+            const formData = new FormData();
+            formData.append('resume', file);
+            const res = await fetch('/upload_resume', { method: 'POST', body: formData });
+            const data = await res.json();
+            alert(data.message || data.error);
+            try {
+                const file = document.getElementById('resume').files[0];
+                if (!file) return alert("Please select a PDF file first.");
+                const formData = new FormData();
+                formData.append('resume', file);
+                const res = await fetch('/upload_resume', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Upload failed");
+                alert(data.message);
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        }
+
+        async function startInterview() {
+            const res = await fetch('/start', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    job_role: document.getElementById('job_role').value,
+                    language: document.getElementById('language').value
+                })
+            });
+            const data = await res.json();
+            addMessage(data.ai_response, 'ai');
+            playAudio(data.audio_url);
+            recordBtn.disabled = false;
+            document.getElementById('send-btn').disabled = false;
+            try {
+                const res = await fetch('/start', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        job_role: document.getElementById('job_role').value,
+                        language: document.getElementById('language').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Could not start interview");
+                
+                addMessage(data.ai_response, 'ai');
+                if (data.audio_url) playAudio(data.audio_url);
+                recordBtn.disabled = false;
+                document.getElementById('send-btn').disabled = false;
+                document.getElementById('status').innerText = "Ready";
+            } catch (err) {
+                alert("Failed to start: " + err.message);
+            }
+        }
+
+        function playAudio(url) {
+            if (!url) return;
+            const audio = new Audio(url + '?t=' + Date.now());
+            audio.play();
+        }
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = sendAudio;
+                mediaRecorder.start();
+                recordBtn.classList.add('recording');
+                document.getElementById('status').innerText = "Recording...";
+                isRecording = true;
+            } else {
+                mediaRecorder.stop();
+                recordBtn.classList.remove('recording');
+                document.getElementById('status').innerText = "Processing...";
+                isRecording = false;
+            }
+        }
+
+        async function sendText() {
+            const textInput = document.getElementById('text-input');
+            const text = textInput.value.trim();
+            if (!text) return;
+
+            textInput.value = "";
+            document.getElementById('status').innerText = "Processing...";
+
+            try {
+                const res = await fetch('/interview', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        text: text,
+                        job_role: document.getElementById('job_role').value,
+                        language: document.getElementById('language').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Processing error");
+
+                addMessage(data.candidate_text, 'user');
+                addMessage(data.ai_response, 'ai');
+                if (data.audio_url) playAudio(data.audio_url);
+                updateLiveMetrics(data.metrics);
+            } catch (err) {
+                alert("Interview Error: " + err.message);
+            }
+            document.getElementById('status').innerText = "Ready";
+        }
+
+        async function sendAudio() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const formData = new FormData();
+            formData.append('audio', audioBlob);
+            formData.append('job_role', document.getElementById('job_role').value);
+            formData.append('language', document.getElementById('language').value);
+            try {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const formData = new FormData();
+                formData.append('audio', audioBlob);
+                formData.append('job_role', document.getElementById('job_role').value);
+                formData.append('language', document.getElementById('language').value);
+
+            const res = await fetch('/interview', { method: 'POST', body: formData });
+            const data = await res.json();
+            
+            addMessage(data.candidate_text, 'user');
+            addMessage(data.ai_response, 'ai');
+            playAudio(data.audio_url);
+                const res = await fetch('/interview', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Processing error");
+                
+                addMessage(data.candidate_text, 'user');
+                addMessage(data.ai_response, 'ai');
+                if (data.audio_url) playAudio(data.audio_url);
+                
+                updateLiveMetrics(data.metrics);
+            } catch (err) {
+                alert("Interview Error: " + err.message);
+            }
+            document.getElementById('status').innerText = "Ready";
+        }
+
+        function updateLiveMetrics(metrics) {
+            if (!metrics) return;
+            document.getElementById('metric-emotion').innerText = metrics.detected_emotion || "Neutral";
+            document.getElementById('metric-confidence').innerText = metrics.confidence || "N/A";
+            
+            const alertsContainer = document.getElementById('proctoring-alerts');
+            alertsContainer.innerHTML = "";
+            if (metrics.proctoring && metrics.proctoring.alerts.length > 0) {
+                metrics.proctoring.alerts.forEach(alert => {
+                    const div = document.createElement('div');
+                    div.innerText = "⚠️ " + alert;
+                    alertsContainer.appendChild(div);
+                });
+            }
+        }
+
+        async function getFeedback() {
+            const res = await fetch('/feedback');
+            const data = await res.json();
+            addMessage("Interview Report: " + data.report, 'ai');
+        }
+
+        async function resetInterview() {
+            await fetch('/reset', { method: 'POST' });
+            location.reload();
+        }
+    </script>
+</body>
+</html>
