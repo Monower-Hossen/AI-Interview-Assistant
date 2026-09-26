@@ -1,0 +1,16 @@
+# AI Interview Assistant - Development Requirements
+# Install with: pip install -r requirements-dev.txt
+# Or: pip install -r requirements.txt -r requirements-dev.txt
+
+# ===========================================
+# Testing
+# ===========================================
+pytest>=8.2.0
+pytest-cov>=5.0.0
+
+# ===========================================
+# Code Quality
+# ===========================================
+ruff>=0.5.0
+black>=24.0.0
+mypy>=1.10.0
